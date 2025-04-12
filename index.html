@@ -171,7 +171,7 @@
 
         const viewBtn = document.createElement('button');
         viewBtn.className = 'btn btn-sm btn-success me-2';
-        viewBtn.textContent = 'View Nutrients';
+        viewBtn.textContent = 'Nutrients';
 
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'btn btn-sm btn-danger';
@@ -190,11 +190,11 @@
         nutrientDetails.className = 'mt-2 ms-3';
 
         Object.entries(nutrientData).forEach(([nutrientName, value]) => {
-          if(value > 0)
-          {
-            const p = document.createElement('div');
-            p.textContent = `${nutrientName}: ${value}`;
-            nutrientDetails.appendChild(p);
+          if (value > 0) {
+            const badge = document.createElement('span');
+            badge.textContent = `${nutrientName}: ${value}`;
+            badge.className = 'badge rounded-pill bg-secondary me-2 mb-1';
+            nutrientDetails.appendChild(badge);
           }
         });
 
