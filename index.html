@@ -133,6 +133,7 @@
         const input = document.createElement('input');
         input.type = 'number';
         input.min = 0;
+        input.value = 0;
         input.step = 'any';
         input.className = 'form-control';
         input.id = `food-nutrient-${nutrientName}`;
@@ -213,15 +214,22 @@
 
     function addFood() {
       const name = document.getElementById('foodName').value;
-      try {
-        const nutrients = JSON.parse(document.getElementById('foodNutrients').value);
-        foods[name] = nutrients;
-        saveData();
-        renderFoods();
-      } catch {
-        alert('Invalid nutrient format. Use JSON like: {"Magnesium": 50}');
-      }
+      if (!name) return;
+
+      const foodNutrientData = {};
+
+      Object.keys(nutrients).forEach(nutrientName => {
+        const value = parseFloat(document.getElementById(`food-nutrient-${nutrientName}`).value);
+        if (!isNaN(value)) {
+          foodNutrientData[nutrientName] = value;
+        }
+      });
+
+      foods[name] = foodNutrientData;
+      saveData();
+      renderFoods();
     }
+
 
     function addToDiary() {
       const food = document.getElementById('foodSelect').value;
