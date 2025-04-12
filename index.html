@@ -30,9 +30,11 @@
 
     <!-- Tracked Nutrients -->
     <div class="tab-content mt-3" id="trackerTabsContent">
-      <div class="tab-pane fade show active edit-box" id="nutrients" role="tabpanel">
+      <button class="btn btn-success mb-3" onclick="showNutrientForm()">Add Nutrient</button>
+
+      <div class="tab-pane fade show active" id="nutrients" role="tabpanel">
         <!-- Nutrient Form -->
-        <div id="nutrientForm" style="display: none;">
+        <div id="nutrientForm" class="edit-box" style="display: none;">
           <div class="mb-3">
             <label class="form-label">Nutrient Name</label>
             <input type="text" id="nutrientName" class="form-control">
@@ -53,7 +55,7 @@
               <option value="IU">IU</option>
             </select>
           </div>
-          <button class="btn btn-primary mb-3" onclick="addNutrient()">Add Nutrient</button>
+          <button class="btn btn-primary mb-3" onclick="saveNutrient()">Save Nutrient</button>
         </div>
 
         <!-- Nutrient List -->
@@ -144,7 +146,17 @@
       });
     }
 
-    function addNutrient() {
+    function showNutrientForm() {
+      const form = document.getElementById('nutrientForm');
+      if (form.style.display === 'none' || form.style.display === '') {
+        form.style.display = 'block';
+        document.getElementById('nutrientName').focus();
+      } else {
+        form.style.display = 'none';
+      }
+    }
+
+    function saveNutrient() {
       const name = document.getElementById('nutrientName').value;
       const minTarget = parseFloat(document.getElementById('nutrientMin').value);
       const maxTarget = parseFloat(document.getElementById('nutrientMax').value);
