@@ -137,6 +137,7 @@
       if (name && !isNaN(minTarget) && !isNaN(maxTarget)) {
         nutrients[name] = { minTarget, maxTarget, unit };
         resetNutrientAdd();
+        document.getElementById('nutrientName').focus();
         saveData();
         renderNutrients();
       }
