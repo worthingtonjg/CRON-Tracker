@@ -271,13 +271,29 @@
         }
       });
 
-      // Display nutrient summary as badges
-      Object.entries(totals).forEach(([nutrient, total]) => {
-        const badge = document.createElement('span');
-        badge.className = 'badge rounded-pill bg-info me-2 mb-1';
-        badge.textContent = `${nutrient}: ${total}`;
-        summaryDiv.appendChild(badge);
+      // Build and display nutrient deficiencies
+      const deficiencies = [];
+
+      Object.entries(nutrients).forEach(([nutrient, { minTarget, unit }]) => {
+        const consumed = totals[nutrient] || 0;
+        if (consumed < minTarget) {
+          const shortfall = (minTarget - consumed).toFixed(2);
+          deficiencies.push(`${nutrient}: missing ${shortfall}${unit}`);
+        }
       });
+
+      if (deficiencies.length > 0) {
+        const ul = document.createElement('ul');
+        ul.className = 'mb-3';
+        deficiencies.forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = item;
+          ul.appendChild(li);
+        });
+        summaryDiv.appendChild(ul);
+      } else {
+        summaryDiv.textContent = 'All tracked nutrient minimums met for this day.';
+      }
 
       // Display list of foods with delete buttons
       const ul = document.createElement('ul');
