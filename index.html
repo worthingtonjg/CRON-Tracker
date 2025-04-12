@@ -120,7 +120,9 @@
 
         <h5 id="diaryDateDisplay" class="mt-4"></h5>
         <div id="diarySummary" class="mb-3"></div>
-        <div id="diaryList" class="mt-3"></div>
+
+        <!-- List of diary Entries -->
+        <div id="diaryList" class="mt-3 scroll-list"></div>
       </div>
     </div>
   </div>
@@ -361,15 +363,20 @@
       saveData();
       renderDiary();
     }
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set default date to today
+      const today = new Date().toISOString().split('T')[0];
+      const diaryDateInput = document.getElementById('diaryDate');
+      diaryDateInput.value = today;
 
-    resetNutrientsForm();
-    renderNutrients();
-    renderFoods();
-    renderDiary();
+      diaryDateInput.addEventListener('change', renderDiary);
 
-    document.getElementById('diaryDate').value = new Date().toISOString().split('T')[0];
-    document.getElementById('diaryDate').addEventListener('change', renderDiary);
-
+      // Initial renders
+      resetNutrientsForm();
+      renderNutrients();
+      renderFoods();
+      renderDiary();
+    });
   </script>
 </body>
 </html>
