@@ -105,11 +105,18 @@
           <input type="date" id="diaryDate" class="form-control" />
         </div>
 
-        <div class="mb-3">
-          <label class="form-label">Select Food</label>
-          <select id="foodSelect" class="form-select"></select>
+        <div class="text-end">
+          <button class="btn btn-success mb-3" onclick="toggleForm('diaryForm')">Add to Diary</button>
         </div>
-        <button class="btn btn-primary mb-3" onclick="addToDiary()">Add to Diary</button>
+
+        <!-- Add to Diary Form -->
+        <div id="diaryForm" class="edit-box" style="display: none;">
+          <div class="mb-3">
+            <label class="form-label">Select Food</label>
+            <select id="foodSelect" class="form-select"></select>
+          </div>
+          <button class="btn btn-primary mb-3" onclick="saveDiaryEntry()">Save Diary Entry</button>
+        </div>
 
         <h5 id="diaryDateDisplay" class="mt-4"></h5>
         <div id="diarySummary" class="mb-3"></div>
@@ -345,7 +352,7 @@
       renderFoods();
     }
 
-    function addToDiary() {
+    function saveDiaryEntry() {
       const food = document.getElementById('foodSelect').value;
       const date = document.getElementById('diaryDate').value;
       if (!food || !date) return;
