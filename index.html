@@ -64,7 +64,7 @@
 
       <!-- Allowed Foods -->
       <div class="tab-pane fade" id="foods" role="tabpanel">
-        <button class="btn btn-success mb-3" onclick="toggleForm('allowedFoodForm')">Add Nutrient</button>
+        <button class="btn btn-success mb-3" onclick="toggleForm('allowedFoodForm')">Add Food</button>
 
         <div id="allowedFoodForm" class="edit-box" style="display: none;">
           <div class="mb-3">
@@ -76,8 +76,9 @@
             <div id="foodNutrientInputs"></div>
           </div>
         </div>
-        <button class="btn btn-primary mb-3" onclick="addFood()">Add Food</button>
+        <button class="btn btn-primary mb-3" onclick="saveFood()">Save Food</button>
         <ul class="list-group scroll-list" id="foodList"></ul>
+        <button class="btn btn-primary mb-3" onclick="addToDiary()">Add to Diary</button>
       </div>
 
       <!-- Food Diary -->
@@ -86,7 +87,6 @@
           <label class="form-label">Select Food</label>
           <select id="foodSelect" class="form-select"></select>
         </div>
-        <button class="btn btn-primary mb-3" onclick="addToDiary()">Add to Diary</button>
         <div id="diaryList" class="mt-3"></div>
       </div>
     </div>
@@ -216,7 +216,7 @@
       renderNutrients();
     }
 
-    function addFood() {
+    function saveFood() {
       const name = document.getElementById('foodName').value;
       if (!name) return;
 
