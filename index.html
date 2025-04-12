@@ -115,13 +115,19 @@
 
         <div class="mb-3">
           <label class="form-label">Diary Date</label>
-          <input type="date" id="diaryDate" class="form-control" />
+          <div class="input-group">
+            <button class="btn btn-outline-secondary" onclick="changeDiaryDate(-1)">←</button>
+            <input type="date" id="diaryDate" class="form-control text-center" />
+            <button class="btn btn-outline-secondary" onclick="changeDiaryDate(1)">→</button>
+          </div>
         </div>
 
-        <h5 id="diaryDateDisplay" class="mt-4"></h5>
-        <div id="diarySummary" class="mb-3"></div>
+        <!-- Deficencies -->
+        <h5 id="deficienciesTitle" class="mt-4"></h5>
+        <div id="deficienciesSummary" class="mb-3"></div>
 
         <!-- List of diary Entries -->
+        <h5 id="diaryDateDisplay" class="mt-4"></h5>
         <div id="diaryList" class="mt-3 scroll-list"></div>
       </div>
     </div>
@@ -250,7 +256,7 @@
 
     function renderDiary() {
       const diaryDiv = document.getElementById('diaryList');
-      const summaryDiv = document.getElementById('diarySummary');
+      const summaryDiv = document.getElementById('deficienciesSummary');
       const selectedDate = document.getElementById('diaryDate').value;
 
       document.getElementById('diaryDateDisplay').textContent = `Food Diary for ${selectedDate}`;
@@ -272,6 +278,8 @@
       });
 
       // Build and display nutrient deficiencies
+      document.getElementById('deficienciesTitle').textContent = `Deficiencies for ${selectedDate}`;
+
       const deficiencies = [];
 
       Object.entries(nutrients).forEach(([nutrient, { minTarget, unit }]) => {
