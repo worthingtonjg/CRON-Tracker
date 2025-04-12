@@ -29,7 +29,8 @@
         </div>
         <div class="mb-3">
           <label class="form-label">Target Amount</label>
-          <input type="number" id="nutrientTarget" class="form-control">
+          <input type="number" id="nutrientMin" class="form-control">
+          <input type="number" id="nutrientMax" class="form-control">
         </div>
         <div class="mb-3">
           <label class="form-label">Unit</label>
@@ -82,10 +83,10 @@
     function renderNutrients() {
       const list = document.getElementById('nutrientList');
       list.innerHTML = '';
-      Object.entries(nutrients).forEach(([name, {target, unit}]) => {
+      Object.entries(nutrients).forEach(([name, {minTarget, maxTarget, unit}]) => {
         const li = document.createElement('li');
         li.className = 'list-group-item d-flex justify-content-between align-items-center';
-        li.innerHTML = `<span>${name}: ${target}${unit}</span>
+        li.innerHTML = `<span>${name}: ${minTarget}-{maxTarget}${unit}</span>
                         <button class="btn btn-sm btn-danger" onclick="deleteNutrient('${name}')">Delete</button>`;
         list.appendChild(li);
       });
@@ -121,10 +122,11 @@
 
     function addNutrient() {
       const name = document.getElementById('nutrientName').value;
-      const target = parseFloat(document.getElementById('nutrientTarget').value);
+      const minTarget = parseFloat(document.getElementById('nutrientMin').value);
+      const maxTarget = parseFloat(document.getElementById('nutrientMax').value);
       const unit = document.getElementById('nutrientUnit').value;
-      if (name && !isNaN(target)) {
-        nutrients[name] = { target, unit };
+      if (name && !isNaN(minTarget) && !isNaN(maxTarget)) {
+        nutrients[name] = { minTarget, maxTarget, unit };
         saveData();
         renderNutrients();
       }
