@@ -38,8 +38,8 @@
         <div class="mb-3">
           <label class="form-label">Unit</label>
           <select id="nutrientUnit" class="form-select">
-            <option value="mcg">mcg</option>
             <option value="mg">mg</option>
+            <option value="mcg">mcg</option>
             <option value="IU">IU</option>
           </select>
         </div>
@@ -136,9 +136,17 @@
       const unit = document.getElementById('nutrientUnit').value;
       if (name && !isNaN(minTarget) && !isNaN(maxTarget)) {
         nutrients[name] = { minTarget, maxTarget, unit };
+        resetNutrientAdd();
         saveData();
         renderNutrients();
       }
+    }
+
+    function resetNutrientAdd()
+    {
+      document.getElementById('nutrientMin').value = 0;
+      document.getElementById('nutrientMax').value = 0;
+      document.getElementById('nutrientUnit').value = '';
     }
 
     function deleteNutrient(name) {
@@ -167,6 +175,7 @@
       renderDiary();
     };
 
+    resetNutrientAdd();
     renderNutrients();
     renderFoods();
     renderDiary();
