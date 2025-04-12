@@ -69,8 +69,8 @@
           <input type="text" id="foodName" class="form-control">
         </div>
         <div class="mb-3">
-          <label class="form-label">Nutrients (JSON format)</label>
-          <textarea id="foodNutrients" class="form-control" rows="4" placeholder='{"Magnesium": 50, "Vitamin D": 400}'></textarea>
+          <label class="form-label">Nutrient Amounts</label>
+          <div id="foodNutrientInputs"></div>
         </div>
         <button class="btn btn-primary mb-3" onclick="addFood()">Add Food</button>
         <ul class="list-group" id="foodList"></ul>
@@ -118,6 +118,31 @@
       });
     }
 
+    function renderFoodNutrientInputs() {
+      const container = document.getElementById('foodNutrientInputs');
+      container.innerHTML = '';
+
+      Object.keys(nutrients).forEach(nutrientName => {
+        const div = document.createElement('div');
+        div.className = 'input-group mb-2';
+
+        const label = document.createElement('span');
+        label.className = 'input-group-text';
+        label.textContent = nutrientName;
+
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = 0;
+        input.step = 'any';
+        input.className = 'form-control';
+        input.id = `food-nutrient-${nutrientName}`;
+
+        div.appendChild(label);
+        div.appendChild(input);
+        container.appendChild(div);
+      });
+    }
+
     function renderFoods() {
       const list = document.getElementById('foodList');
       const select = document.getElementById('foodSelect');
@@ -133,6 +158,8 @@
         option.textContent = name;
         select.appendChild(option);
       });
+
+      renderFoodNutrientInputs();
     }
 
     function renderDiary() {
