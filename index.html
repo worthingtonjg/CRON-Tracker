@@ -101,10 +101,18 @@
       <!-- Food Diary -->
       <div class="tab-pane fade" id="diary" role="tabpanel">
         <div class="mb-3">
+          <label class="form-label">Diary Date</label>
+          <input type="date" id="diaryDate" class="form-control" />
+        </div>
+
+        <div class="mb-3">
           <label class="form-label">Select Food</label>
           <select id="foodSelect" class="form-select"></select>
         </div>
         <button class="btn btn-primary mb-3" onclick="addToDiary()">Add to Diary</button>
+
+        <h5 id="diaryDateDisplay" class="mt-4"></h5>
+        <div id="diarySummary" class="mb-3"></div>
         <div id="diaryList" class="mt-3"></div>
       </div>
     </div>
@@ -233,14 +241,38 @@
 
     function renderDiary() {
       const diaryDiv = document.getElementById('diaryList');
+      const summaryDiv = document.getElementById('diarySummary');
+      const selectedDate = document.getElementById('diaryDate').value;
+
+      document.getElementById('diaryDateDisplay').textContent = `Food Diary for ${selectedDate}`;
+
+      // Filter entries by date
+      const entries = diary.filter(entry => entry.date === selectedDate);
       diaryDiv.innerHTML = '';
-      diary.forEach(entry => {
+      summaryDiv.innerHTML = '';
+
+      // Build nutrient summary
+      const totals = {};
+      entries.forEach(entry => {
+        const nutrientsInFood = foods[entry.food] || {};
+        Object.entries(nutrientsInFood).forEach(([nutrient, value]) => {
+          totals[nutrient] = (totals[nutrient] || 0) + value;
+        });
+
         const div = document.createElement('div');
-        div.className = 'mb-2';
-        div.textContent = `${entry.date} - ${entry.food}`;
+        div.className = 'mb-1';
+        div.textContent = entry.food;
         diaryDiv.appendChild(div);
       });
+
+      Object.entries(totals).forEach(([nutrient, total]) => {
+        const span = document.createElement('span');
+        span.className = 'badge rounded-pill bg-info me-2 mb-1';
+        span.textContent = `${nutrient}: ${total}`;
+        summaryDiv.appendChild(span);
+      });
     }
+
 
     function toggleForm(formName) {
       const form = document.getElementById(formName);
@@ -315,16 +347,22 @@
 
     function addToDiary() {
       const food = document.getElementById('foodSelect').value;
-      const date = new Date().toISOString().split('T')[0];
+      const date = document.getElementById('diaryDate').value;
+      if (!food || !date) return;
+
       diary.push({ date, food });
       saveData();
       renderDiary();
-    };
+    }
 
     resetNutrientsForm();
     renderNutrients();
     renderFoods();
     renderDiary();
+
+    document.getElementById('diaryDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('diaryDate').addEventListener('change', renderDiary);
+
   </script>
 </body>
 </html>
