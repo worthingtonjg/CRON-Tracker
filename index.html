@@ -93,8 +93,10 @@
         
         const li = document.createElement('li');
         li.className = 'list-group-item d-flex justify-content-between align-items-center';
-        li.innerHTML = `<span>${name}: ${range}</span>
-                        <button class="btn btn-sm btn-danger" onclick="deleteNutrient('${name}')">Delete</button>`;
+        li.innerHTML = `
+          <span>${name}: ${range}</span>
+          <button class="btn btn-sm btn-danger" onclick="deleteNutrient('${name}')">Delete</button>
+        `;
         list.appendChild(li);
       });
     }
