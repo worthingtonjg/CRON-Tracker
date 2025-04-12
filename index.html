@@ -94,12 +94,6 @@
                         <button class="btn btn-sm btn-danger" onclick="deleteNutrient('${name}')">Delete</button>`;
         list.appendChild(li);
       });
-    }]) => {
-        const li = document.createElement('li');
-        li.className = 'list-group-item';
-        li.textContent = `${name}: ${target}${unit}`;
-        list.appendChild(li);
-      });
     }
 
     function renderFoods() {
@@ -159,10 +153,7 @@
       diary.push({ date, food });
       saveData();
       renderDiary();
-    });
-      saveData();
-      renderDiary();
-    }
+    };
 
     renderNutrients();
     renderFoods();
