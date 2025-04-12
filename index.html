@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Insulin Resistance Tracker</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    section { margin-bottom: 30px; }
+    label { display: block; margin-top: 10px; }
+    input, select, button, textarea { margin-top: 5px; display: block; }
+    .food-entry { margin-top: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Insulin Resistance Tracker</h1>
+
+  <section>
+    <h2>Tracked Nutrients</h2>
+    <label>Nutrient Name: <input type="text" id="nutrientName"></label>
+    <label>Target Amount: <input type="number" id="nutrientTarget"></label>
+    <label>Unit: 
+      <select id="nutrientUnit">
+        <option value="mcg">mcg</option>
+        <option value="mg">mg</option>
+        <option value="IU">IU</option>
+      </select>
+    </label>
+    <button onclick="addNutrient()">Add Nutrient</button>
+    <ul id="nutrientList"></ul>
+  </section>
+
+  <section>
+    <h2>Allowed Foods</h2>
+    <label>Food Name: <input type="text" id="foodName"></label>
+    <label>Nutrients (JSON format):</label>
+    <textarea id="foodNutrients" rows="4" cols="50" placeholder='{"Magnesium": 50, "Vitamin D": 400}'></textarea>
+    <button onclick="addFood()">Add Food</button>
+    <ul id="foodList"></ul>
+  </section>
+
+  <section>
+    <h2>Daily Food Diary</h2>
+    <label>Select Food:</label>
+    <select id="foodSelect"></select>
+    <button onclick="addToDiary()">Add to Diary</button>
+    <div id="diary"></div>
+  </section>
+
+  <script>
+    const nutrients = JSON.parse(localStorage.getItem('nutrients') || '{}');
+    const foods = JSON.parse(localStorage.getItem('foods') || '{}');
+    const diary = JSON.parse(localStorage.getItem('diary') || '[]');
+
+    function saveData() {
+      localStorage.setItem('nutrients', JSON.stringify(nutrients));
+      localStorage.setItem('foods', JSON.stringify(foods));
+      localStorage.setItem('diary', JSON.stringify(diary));
+    }
+
+    function renderNutrients() {
+      const list = document.getElementById('nutrientList');
+      list.innerHTML = '';
+      Object.entries(nutrients).forEach(([name, {target, unit}]) => {
+        const li = document.createElement('li');
+        li.textContent = `${name}: ${target}${unit}`;
+        list.appendChild(li);
+      });
+    }
+
+    function renderFoods() {
+      const list = document.getElementById('foodList');
+      const select = document.getElementById('foodSelect');
+      list.innerHTML = '';
+      select.innerHTML = '';
+      Object.entries(foods).forEach(([name, nutrients]) => {
+        const li = document.createElement('li');
+        li.textContent = `${name} - Nutrients: ${JSON.stringify(nutrients)}`;
+        list.appendChild(li);
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        select.appendChild(option);
+      });
+    }
+
+    function renderDiary() {
+      const diaryDiv = document.getElementById('diary');
+      diaryDiv.innerHTML = '';
+      diary.forEach(entry => {
+        const div = document.createElement('div');
+        div.className = 'food-entry';
+        div.textContent = `${entry.date} - ${entry.food}`;
+        diaryDiv.appendChild(div);
+      });
+    }
+
+    function addNutrient() {
+      const name = document.getElementById('nutrientName').value;
+      const target = parseFloat(document.getElementById('nutrientTarget').value);
+      const unit = document.getElementById('nutrientUnit').value;
+      if (name && !isNaN(target)) {
+        nutrients[name] = { target, unit };
+        saveData();
+        renderNutrients();
+      }
+    }
+
+    function addFood() {
+      const name = document.getElementById('foodName').value;
+      try {
+        const nutrients = JSON.parse(document.getElementById('foodNutrients').value);
+        foods[name] = nutrients;
+        saveData();
+        renderFoods();
+      } catch {
+        alert('Invalid nutrient format. Use JSON like: {"Magnesium": 50}');
+      }
+    }
+
+    function addToDiary() {
+      const food = document.getElementById('foodSelect').value;
+      const date = new Date().toISOString().split('T')[0];
+      diary.push({ date, food });
+      saveData();
+      renderDiary();
+    }
+
+    renderNutrients();
+    renderFoods();
+    renderDiary();
+  </script>
+</body>
+</html>
