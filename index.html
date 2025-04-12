@@ -308,18 +308,32 @@
         }
       });
 
-      if (deficiencies.length > 0) {
-        const ul = document.createElement('ul');
-        ul.className = 'mb-3';
-        deficiencies.forEach(item => {
-          const li = document.createElement('li');
-          li.textContent = item;
-          ul.appendChild(li);
-        });
-        summaryDiv.appendChild(ul);
-      } else {
-        summaryDiv.textContent = 'All tracked nutrient minimums met for this day.';
-      }
+      summaryDiv.innerHTML = '';
+
+      Object.entries(nutrients).forEach(([nutrient, { minTarget, unit }]) => {
+        const consumed = totals[nutrient] || 0;
+        const percent = Math.min((consumed / minTarget) * 100, 100);
+        const progressColor = consumed >= minTarget ? 'bg-success' : 'bg-secondary';
+
+        const label = document.createElement('div');
+        label.className = 'mb-1 fw-bold';
+        label.textContent = `${nutrient}: ${consumed.toFixed(1)} / ${minTarget}${unit}`;
+
+        const progressWrapper = document.createElement('div');
+        progressWrapper.className = 'progress mb-3';
+        
+        const progressBar = document.createElement('div');
+        progressBar.className = `progress-bar ${progressColor}`;
+        progressBar.style.width = `${percent}%`;
+        progressBar.setAttribute('aria-valuenow', consumed);
+        progressBar.setAttribute('aria-valuemin', 0);
+        progressBar.setAttribute('aria-valuemax', minTarget);
+        progressBar.textContent = `${Math.round(percent)}%`;
+
+        progressWrapper.appendChild(progressBar);
+        summaryDiv.appendChild(label);
+        summaryDiv.appendChild(progressWrapper);
+      });
 
       // Display list of foods with delete buttons
       const ul = document.createElement('ul');
