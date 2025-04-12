@@ -170,7 +170,7 @@
         const btnGroup = document.createElement('div');
 
         const viewBtn = document.createElement('button');
-        viewBtn.className = 'btn btn-sm btn-info me-2';
+        viewBtn.className = 'btn btn-sm btn-success me-2';
         viewBtn.textContent = 'View Nutrients';
 
         const deleteBtn = document.createElement('button');
@@ -190,9 +190,12 @@
         nutrientDetails.className = 'mt-2 ms-3';
 
         Object.entries(nutrientData).forEach(([nutrientName, value]) => {
-          const p = document.createElement('div');
-          p.textContent = `${nutrientName}: ${value}`;
-          nutrientDetails.appendChild(p);
+          if(value > 0)
+          {
+            const p = document.createElement('div');
+            p.textContent = `${nutrientName}: ${value}`;
+            nutrientDetails.appendChild(p);
+          }
         });
 
         viewBtn.onclick = () => {
