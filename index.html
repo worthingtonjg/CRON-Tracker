@@ -100,11 +100,6 @@
 
       <!-- Food Diary -->
       <div class="tab-pane fade" id="diary" role="tabpanel">
-        <div class="mb-3">
-          <label class="form-label">Diary Date</label>
-          <input type="date" id="diaryDate" class="form-control" />
-        </div>
-
         <div class="text-end">
           <button class="btn btn-success mb-3" onclick="toggleForm('diaryForm')">Add to Diary</button>
         </div>
@@ -116,6 +111,11 @@
             <select id="foodSelect" class="form-select"></select>
           </div>
           <button class="btn btn-primary mb-3" onclick="saveDiaryEntry()">Save Diary Entry</button>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Diary Date</label>
+          <input type="date" id="diaryDate" class="form-control" />
         </div>
 
         <h5 id="diaryDateDisplay" class="mt-4"></h5>
@@ -255,33 +255,53 @@
 
       document.getElementById('diaryDateDisplay').textContent = `Food Diary for ${selectedDate}`;
 
-      // Filter entries by date
+      // Filter diary entries by selected date
       const entries = diary.filter(entry => entry.date === selectedDate);
       diaryDiv.innerHTML = '';
       summaryDiv.innerHTML = '';
 
-      // Build nutrient summary
+      // Build nutrient totals
       const totals = {};
       entries.forEach(entry => {
-        const nutrientsInFood = foods[entry.food] || {};
-        Object.entries(nutrientsInFood).forEach(([nutrient, value]) => {
+        const food = foods[entry.food];
+        if (!food) return;
+
+        for (const [nutrient, value] of Object.entries(food)) {
           totals[nutrient] = (totals[nutrient] || 0) + value;
-        });
-
-        const div = document.createElement('div');
-        div.className = 'mb-1';
-        div.textContent = entry.food;
-        diaryDiv.appendChild(div);
+        }
       });
 
+      // Display nutrient summary as badges
       Object.entries(totals).forEach(([nutrient, total]) => {
-        const span = document.createElement('span');
-        span.className = 'badge rounded-pill bg-info me-2 mb-1';
-        span.textContent = `${nutrient}: ${total}`;
-        summaryDiv.appendChild(span);
+        const badge = document.createElement('span');
+        badge.className = 'badge rounded-pill bg-info me-2 mb-1';
+        badge.textContent = `${nutrient}: ${total}`;
+        summaryDiv.appendChild(badge);
       });
-    }
 
+      // Display list of foods with delete buttons
+      const ul = document.createElement('ul');
+      ul.className = 'list-group';
+
+      entries.forEach((entry, localIndex) => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+
+        const text = document.createElement('span');
+        text.textContent = entry.food;
+
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-sm btn-danger';
+        btn.textContent = 'Delete';
+        btn.onclick = () => deleteDiaryEntry(selectedDate, localIndex);
+
+        li.appendChild(text);
+        li.appendChild(btn);
+        ul.appendChild(li);
+      });
+
+      diaryDiv.appendChild(ul);
+    }
 
     function toggleForm(formName) {
       const form = document.getElementById(formName);
@@ -363,6 +383,25 @@
       saveData();
       renderDiary();
     }
+
+    function deleteDiaryEntry(date, localIndex) {
+      let counter = -1;
+
+      const globalIndex = diary.findIndex(entry => {
+        if (entry.date === date) {
+          counter++;
+          return counter === localIndex;
+        }
+        return false;
+      });
+
+      if (globalIndex !== -1) {
+        diary.splice(globalIndex, 1);
+        saveData();
+        renderDiary();
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       // Set default date to today
       const today = new Date().toISOString().split('T')[0];
