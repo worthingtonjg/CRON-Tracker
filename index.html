@@ -304,14 +304,14 @@
 
       summaryDiv.innerHTML = '';
 
-      Object.entries(nutrients).forEach(([nutrient, { minTarget, unit }]) => {
+      Object.entries(nutrients).forEach(([nutrient, { minTarget, maxTarget, unit }]) => {
         const consumed = totals[nutrient] || 0;
         const percent = Math.min((consumed / minTarget) * 100, 100);
         const progressColor = consumed >= minTarget ? 'bg-success' : 'bg-secondary';
 
         const label = document.createElement('div');
         label.className = 'mb-1 fw-bold';
-        label.textContent = `${nutrient}: ${consumed.toFixed(1)} / ${minTarget}${unit}`;
+        label.textContent = `${nutrient}: ${consumed.toFixed(1)} / ${minTarget}-{maxTarget}${unit}`;
 
         const progressWrapper = document.createElement('div');
         progressWrapper.className = 'progress mb-3';
