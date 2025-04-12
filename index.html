@@ -87,7 +87,7 @@
       const list = document.getElementById('nutrientList');
       list.innerHTML = '';
       Object.entries(nutrients).forEach(([name, {minTarget, maxTarget, unit}]) => {
-        const range = maxTarget
+        const range = maxTarget > 0
           ? `${minTarget}-${maxTarget}${unit}`
           : `${minTarget}${unit}`;
         
